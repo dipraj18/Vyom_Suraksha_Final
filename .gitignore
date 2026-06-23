@@ -1,0 +1,11 @@
+venv/
+logs/
+__pycache__/
+*.pyc
+.secure_keys/
+integrity_baseline.json
+tests/sandbox/
+*.enc
+*.tar.gz
+*.key
+.system_generated/

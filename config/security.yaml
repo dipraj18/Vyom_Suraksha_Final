@@ -1,0 +1,17 @@
+backup:
+  backup_dir: logs/backup
+  key_path: .secure_keys/vyom_backup.key
+  remote_dir: logs/remote_storage
+  retention_limit: 5
+integrity:
+  monitored_paths:
+  - bhairava
+  - bhairavi
+  - config
+risk_thresholds:
+  alert: 35
+  containment: 65
+  lockdown: 95
+webhook:
+  enabled: true
+  url: http://127.0.0.1:5000/api/mock-webhook

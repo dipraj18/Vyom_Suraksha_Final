@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vyom Suraksha // Active Cyber Air Shield Terminal</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Share+Tech+Mono&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="cyber-container">
+        
+        <!-- HEADER -->
+        <header class="cyber-header">
+            <div class="logo-area">
+                <span class="pulse-dot state-indicator-dot"></span>
+                <h1>VYOM SURAKSHA <span class="header-sub">// ACTIVE AIR SHIELD</span></h1>
+            </div>
+            <div class="system-meta">
+                <div class="meta-item">
+                    <span class="label">NODE:</span>
+                    <span class="value cyan-glow">VYOM_NODE_01</span>
+                </div>
+                <div class="meta-item">
+                    <span class="label">STEALTH:</span>
+                    <span id="stealth-badge" class="value text-warning">NORMAL</span>
+                </div>
+                <div class="meta-item">
+                    <span class="label">SYS_TIME:</span>
+                    <span id="sys-time" class="value">00:00:00</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- TOP LEVEL ALERT BANNER -->
+        <div id="lockdown-banner" class="banner hidden">
+            <div class="banner-content">
+                <span class="alert-icon">⚠️</span>
+                <span>SYSTEM UNDER LOCKDOWN - SENSITIVE DATA ISOLATED</span>
+            </div>
+        </div>
+
+        <!-- MAIN LAYOUT GRID -->
+        <main class="cyber-grid">
+            
+            <!-- ROW 1, COL 1-2: STATE & OVERRIDES -->
+            <section class="cyber-card col-span-2 status-card">
+                <div class="card-header">
+                    <h2>SYSTEM ORCHESTRATION STATE</h2>
+                    <span class="deco-line"></span>
+                </div>
+                <div class="card-content flex-col center">
+                    <div id="state-display" class="state-box text-success">
+                        NORMAL
+                    </div>
+                    <div class="control-actions">
+                        <button id="btn-reset" class="btn btn-outline-success">Reset State to Normal</button>
+                        <div class="danger-row">
+                            <button id="btn-containment" class="btn btn-outline-warning">Force Containment</button>
+                            <button id="btn-lockdown" class="btn btn-outline-danger">Force Lockdown</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ROW 1, COL 3: RISK ENGINE -->
+            <section class="cyber-card risk-card">
+                <div class="card-header">
+                    <h2>RISK PROFILE</h2>
+                    <span class="deco-line"></span>
+                </div>
+                <div class="card-content center flex-col">
+                    <div class="gauge-container">
+                        <div class="gauge-outer">
+                            <svg class="gauge-svg" viewBox="0 0 100 100">
+                                <circle class="gauge-bg" cx="50" cy="50" r="40"></circle>
+                                <circle id="risk-gauge" class="gauge-progress stroke-success" cx="50" cy="50" r="40" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+                            </svg>
+                            <div class="gauge-value" id="risk-score">0</div>
+                        </div>
+                    </div>
+                    <span class="gauge-label">RISK INDEX</span>
+                </div>
+            </section>
+
+            <!-- ROW 1, COL 4: TRUST ENGINE -->
+            <section class="cyber-card trust-card">
+                <div class="card-header">
+                    <h2>TRUST SCORE</h2>
+                    <span class="deco-line"></span>
+                </div>
+                <div class="card-content center flex-col">
+                    <div class="gauge-container">
+                        <div class="gauge-outer">
+                            <svg class="gauge-svg" viewBox="0 0 100 100">
+                                <circle class="gauge-bg" cx="50" cy="50" r="40"></circle>
+                                <circle id="trust-gauge" class="gauge-progress stroke-info" cx="50" cy="50" r="40" stroke-dasharray="251.2" stroke-dashoffset="0"></circle>
+                            </svg>
+                            <div class="gauge-value" id="trust-score">100</div>
+                        </div>
+                    </div>
+                    <span class="gauge-label">TRUST RATIO</span>
+                </div>
+            </section>
+
+            <!-- ROW 2, COL 1-2: PERFORMANCE & REAL-TIME CHARTS -->
+            <section class="cyber-card col-span-2 telemetry-card">
+                <div class="card-header">
+                    <h2>SYSTEM PERFORMANCE & SECURITY TRENDS</h2>
+                    <span class="deco-line"></span>
+                </div>
+                <div class="card-content flex-row gap-20">
+                    <!-- Telemetry progress bars -->
+                    <div class="width-40 flex-col justify-between">
+                        <div class="stat-progress">
+                            <div class="progress-info">
+                                <span>CPU UTILIZATION</span>
+                                <span id="cpu-percent">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div id="cpu-bar" class="progress-fill fill-cyan" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="stat-progress">
+                            <div class="progress-info">
+                                <span>VIRTUAL MEMORY</span>
+                                <span id="memory-percent">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div id="memory-bar" class="progress-fill fill-cyan" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="stealth-selector-wrapper">
+                            <label for="stealth-select">STEALTH MODE LEVEL:</label>
+                            <select id="stealth-select" class="cyber-select">
+                                <option value="NORMAL">NORMAL (All Logs)</option>
+                                <option value="QUIET">QUIET (Warnings & Errors)</option>
+                                <option value="SILENT">SILENT (Critical Only)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Trend Graph -->
+                    <div class="width-60 canvas-container flex-col">
+                        <h3 class="panel-subtitle">Real-time Risk vs Trust Trends</h3>
+                        <div class="canvas-wrapper">
+                            <canvas id="security-trend-chart" height="95"></canvas>
+                        </div>
+                        <div class="chart-legend">
+                            <span class="legend-item"><span class="legend-dot color-red"></span>Risk</span>
+                            <span class="legend-item"><span class="legend-dot color-blue"></span>Trust</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ROW 2, COL 3-4: BACKUP & CONFIG MANAGEMENT -->
+            <section class="cyber-card col-span-2 backup-card">
+                <div class="card-header">
+                    <h2>ENCRYPTION & BACKUP ARCHIVE</h2>
+                    <span class="deco-line"></span>
+                </div>
+                <div class="card-content flex-row gap-20">
+                    <!-- Left Column: Config Inputs & Triggers -->
+                    <div class="width-50 flex-col justify-between gap-10">
+                        <div id="backup-status-wrapper" class="alert-status-box success-border">
+                            <span class="icon">🔒</span>
+                            <div class="desc">
+                                <span class="title">Subsystem Active</span>
+                                <span class="subtext" id="backup-key-desc">Scanning key file...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="config-fields flex-col gap-5">
+                            <div class="input-group">
+                                <label for="input-key-path">KEY FILE STORAGE PATH:</label>
+                                <input type="text" id="input-key-path" class="cyber-input-full" placeholder=".secure_keys/vyom_backup.key">
+                            </div>
+                            <div class="input-group">
+                                <label for="input-backup-dir">BACKUP STORAGE DIRECTORY:</label>
+                                <input type="text" id="input-backup-dir" class="cyber-input-full" placeholder="logs/backup">
+                            </div>
+                            <div class="input-group">
+                                <label for="input-remote-dir">REMOTE STORAGE PATH:</label>
+                                <input type="text" id="input-remote-dir" class="cyber-input-full" placeholder="logs/remote_storage">
+                            </div>
+                            <div class="input-group flex-row gap-10">
+                                <div class="input-group" style="width: 45%;">
+                                    <label for="input-retention">RETENTION LIMIT:</label>
+                                    <input type="number" id="input-retention" class="cyber-input-full" min="1" max="50" placeholder="5">
+                                </div>
+                                <div class="input-group" style="width: 55%;">
+                                    <label for="input-monitored-dirs">MONITORED TARGETS (CSV):</label>
+                                    <input type="text" id="input-monitored-dirs" class="cyber-input-full" placeholder="bhairava,bhairavi,config">
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>THRESHOLD TRIGGERS (ALERT / CONT / LOCK):</label>
+                                <div class="thresholds-row">
+                                    <input type="number" id="input-alert" class="cyber-input-mini" min="1" max="100" placeholder="30">
+                                    <input type="number" id="input-containment" class="cyber-input-mini" min="1" max="100" placeholder="60">
+                                    <input type="number" id="input-lockdown" class="cyber-input-mini" min="1" max="100" placeholder="90">
+                                </div>
+                            </div>
+                            <div class="input-group flex-row gap-10" style="align-items: center; margin-top: 5px; margin-bottom: 5px;">
+                                <div class="flex-row gap-5" style="align-items: center; width: 40%; display: flex;">
+                                    <input type="checkbox" id="input-webhook-enabled" style="cursor: pointer; width: 14px; height: 14px;">
+                                    <label for="input-webhook-enabled" style="font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--color-text-dim); cursor: pointer; margin-left: 4px;">ENABLE WEBHOOK</label>
+                                </div>
+                                <div class="input-group" style="width: 60%;">
+                                    <input type="text" id="input-webhook-url" class="cyber-input-full" placeholder="Webhook Endpoint URL">
+                                </div>
+                            </div>
+                            <button id="btn-save-config" class="btn btn-outline-success btn-full">Save Changes</button>
+                        </div>
+                        
+                        <div class="backup-controls flex-row gap-10">
+                            <button id="btn-backup" class="btn btn-cyan btn-full">Create Backup</button>
+                            <button id="btn-generate-key" class="btn btn-warning btn-full hidden">Generate AES Key</button>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Extracted backups list -->
+                    <div class="width-50 flex-col">
+                        <h3 class="panel-subtitle">Encrypted Backups on Disk (.enc)</h3>
+                        <div class="scroll-list" id="backups-archive-list">
+                            <div class="loading-text">Scanning archive...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ROW 3, COL 1-2: SYSTEM TOPOLOGY HUD -->
+            <section class="cyber-card col-span-2 topology-card">
+                <div class="card-header">
+                    <h2>SECURE AIR SHIELD TOPOLOGY HUD</h2>
+                    <span class="deco-line"></span>
+                </div>
+                <div class="card-content flex-col justify-between">
+                    <div class="topology-wrapper">
+                        <div class="topology-subsystems">
+                            <!-- Bhairavi Policy Layer -->
+                            <div class="subsystem-block bhairavi-block">
+                                <span class="subsystem-title">BHAIRAVI (POLICY SYSTEM)</span>
+                                <div class="nodes-grid">
+                                    <div class="node-item active-node" id="node-state" title="State Controller: Coordinates system mode transitions.">State Controller</div>
+                                    <div class="node-item active-node" id="node-risk" title="Risk Engine: Calculates threat index and risk decay.">Risk Engine</div>
+                                    <div class="node-item active-node" id="node-trust" title="Trust Core: Calculates real-time confidence rating.">Trust Core</div>
+                                    <div class="node-item active-node" id="node-policy" title="Policy Engine: Evaluates rulesets and logs state events.">Policy Engine</div>
+                                    <div class="node-item active-node" id="node-secret" title="Secret Guard: Disables cryptographic access under alert.">Secret Guard</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Inter-system bridge -->
+                            <div class="topology-connector">
+                                <div class="connector-line"></div>
+                                <div class="pulse-beam"></div>
+                            </div>
+                            
+                            <!-- Bhairava Execution Layer -->
+                            <div class="subsystem-block bhairava-block">
+                                <span class="subsystem-title">BHAIRAVA (EXECUTION ENGINE)</span>
+                                <div class="nodes-grid">
+                                    <div class="node-item active-node" id="node-orchestrator" title="Orchestrator: Coordinates active detection loops.">Orchestrator</div>
+                                    <div class="node-item active-node" id="node-monitor" title="Resource Monitor: Checks CPU and memory usage statistics.">Resource Monitor</div>
+                                    <div class="node-item active-node" id="node-alert" title="Alert Engine: Triggers system desktop notifications.">Alert Engine</div>
+                                    <div class="node-item active-node" id="node-backup" title="AES Backup: Encrypts files upon threat detection.">AES Backup</div>
+                                    <div class="node-item active-node" id="node-canary" title="Canary Decoy: Bait file watching for suspicious file accesses.">Decoy Canary</div>
+                                    <div class="node-item active-node" id="node-beacon" title="Beacon Log: Writes secure cryptographic heartbeat logs.">Beacon Log</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ROW 3, COL 3-4: INTEGRITY & HONEYPOTS -->
+            <section class="cyber-card col-span-2 integrity-card">
+                <div class="card-header">
+                    <h2>INTEGRITY & HONEYPOTS</h2>
+                    <span class="deco-line"></span>
+                </div>
+                <div class="card-content flex-row gap-20">
+                    <div class="integrity-sub-panel width-50 flex-col">
+                        <h3 class="panel-subtitle">File Integrity Guard</h3>
+                        <div class="scroll-list" id="monitored-files-list">
+                            <div class="loading-text">Loading baseline...</div>
+                        </div>
+                        <button id="btn-rebaseline" class="btn btn-outline-warning btn-full" style="margin-top: 10px;">Accept Current State as Baseline</button>
+                    </div>
+                    
+                    <div class="integrity-sub-panel width-50 flex-col gap-10">
+                        <h3 class="panel-subtitle">Deception Canaries</h3>
+                        <div id="canary-status" class="canary-box status-ok">
+                            <span class="status-icon">🛡️</span>
+                            <div class="canary-info">
+                                <span class="canary-title">Decoy Secret File</span>
+                                <span class="canary-path" id="canary-file-path">deception/decoy_secret.txt</span>
+                                <span class="canary-state-text">NO ACCESS DETECTED</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Canary Settings Editor -->
+                        <div class="canary-config-editor flex-col gap-5">
+                            <div class="input-group">
+                                <label for="input-canary-path">DECOY FILE PATH:</label>
+                                <input type="text" id="input-canary-path" class="cyber-input-full" placeholder="deception/decoy_secret.txt">
+                            </div>
+                            <div class="input-group">
+                                <label for="input-canary-content">DECOY BAIT CONTENT:</label>
+                                <textarea id="input-canary-content" class="cyber-textarea" rows="2" placeholder="DO NOT ACCESS..."></textarea>
+                            </div>
+                            <button id="btn-save-canary" class="btn btn-outline-warning btn-full">Update Bait Settings</button>
+                        </div>
+
+                        <div id="tampered-files-box" class="tampered-files-box hidden">
+                            <span class="warning-title">🚨 TAMPERED FILES DETECTED:</span>
+                            <ul id="tampered-files-list">
+                                <!-- Populated dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ROW 4, COL 1-4: AUDIT LEDGER LOGS CONSOLE (FULL WIDTH) -->
+            <section class="cyber-card col-span-4 log-console-card">
+                <div class="card-header split">
+                    <h2>SECURE AUDIT LEDGER CONSOLE</h2>
+                    <div class="console-controls">
+                        <button id="btn-verify-ledger" class="btn btn-outline-success">Verify Ledger Signature Chain</button>
+                        <span id="ledger-verification-status" class="ledger-status-tag status-none">// UNVERIFIED</span>
+                        <input type="text" id="log-search" class="cyber-input" placeholder="Search events...">
+                        <select id="log-filter" class="cyber-select-mini">
+                            <option value="ALL">ALL EVENTS</option>
+                            <option value="STATE_CHANGE">STATE TRANSITIONS</option>
+                            <option value="ALERT_TRIGGERED">THREAT ALERTS</option>
+                            <option value="BACKUP">BACKUP ACTIONS</option>
+                            <option value="ERROR">ERRORS & WARNS</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-content no-padding">
+                    <div id="log-terminal" class="terminal-body">
+                        <div class="terminal-line"><span class="t-cyan">[SYSTEM]</span> Connecting to security ledger stream...</div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+        
+        <!-- FOOTER -->
+        <footer class="cyber-footer">
+            <span class="footer-left">VYOM_SURAKSHA V2.0 // DEPLOYED ON PORTABLE STORAGE DEVICE // PARROT SEC OS</span>
+            <span class="footer-right" id="connection-status">STREAM CONNECTION: <span class="text-success">ONLINE</span></span>
+        </footer>
+
+    </div>
+
+    <!-- UI Logic Scripts -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
